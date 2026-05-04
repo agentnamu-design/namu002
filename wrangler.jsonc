@@ -1,12 +1,17 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "namu002",
+  "main": "src/worker.js",
   "compatibility_date": "2026-05-04",
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "."
+    "directory": "public",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
   },
   "compatibility_flags": [
     "nodejs_compat"
