@@ -28,19 +28,49 @@
                 <p class="summary">앞뒤로 쉬는 날이 이어지는지와 활동하기 좋은 날씨인지에 따라 점수를 차등 계산합니다.</p>
             </header>
 
-            <form class="controls" id="searchForm">
-                <label for="cityInput">날씨 기준 지역</label>
-                <div class="input-row">
-                    <input id="cityInput" name="city" type="text" value="서울" autocomplete="address-level2">
-                    <button type="submit">추천 다시 보기</button>
-                </div>
-            </form>
+            <div class="planner-content">
+                <form class="controls" id="searchForm">
+                    <label for="cityInput">날씨 기준 지역</label>
+                    <div class="input-row">
+                        <input id="cityInput" name="city" type="text" value="서울" autocomplete="address-level2">
+                        <button type="submit">추천 다시 보기</button>
+                    </div>
+                </form>
 
-            <section class="best-pick" id="bestPick" aria-live="polite">
-                <p class="loading">다음 주 일정과 날씨를 확인하는 중입니다.</p>
-            </section>
+                <section class="best-pick" id="bestPick" aria-live="polite">
+                    <p class="loading">다음 주 일정과 날씨를 확인하는 중입니다.</p>
+                </section>
 
-            <section class="day-list" id="dayList" aria-label="상위 추천일"></section>
+                <section class="day-list" id="dayList" aria-label="상위 추천일"></section>
+
+                <form class="contact-form" action="https://formspree.io/f/xdabegea" method="POST">
+                    <input type="hidden" name="_subject" value="다음 주 연차 추천 서비스 제휴 문의">
+                    <input class="hidden-field" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+                    <div class="contact-heading">
+                        <p class="best-label">제휴 문의</p>
+                        <h2>서비스 협업을 제안해 주세요</h2>
+                    </div>
+                    <div class="form-grid">
+                        <label for="partnerName">
+                            이름
+                            <input id="partnerName" name="name" type="text" autocomplete="name" required>
+                        </label>
+                        <label for="partnerEmail">
+                            이메일
+                            <input id="partnerEmail" name="email" type="email" autocomplete="email" required>
+                        </label>
+                    </div>
+                    <label for="partnerCompany">
+                        회사/브랜드
+                        <input id="partnerCompany" name="company" type="text" autocomplete="organization">
+                    </label>
+                    <label for="partnerMessage">
+                        문의 내용
+                        <textarea id="partnerMessage" name="message" rows="4" required></textarea>
+                    </label>
+                    <button type="submit">문의 보내기</button>
+                </form>
+            </div>
         </section>
     </main>
 

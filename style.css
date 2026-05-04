@@ -90,6 +90,11 @@ body {
     background: var(--header-bg);
 }
 
+.planner-content {
+    display: grid;
+    gap: 14px;
+}
+
 .theme-toggle {
     position: absolute;
     top: 18px;
@@ -182,6 +187,19 @@ input {
     font: inherit;
 }
 
+textarea {
+    min-height: 118px;
+    width: 100%;
+    resize: vertical;
+    border: 1px solid var(--field-line);
+    border-radius: 12px;
+    padding: 12px 13px;
+    color: var(--ink);
+    background: var(--field-bg);
+    font: inherit;
+    line-height: 1.5;
+}
+
 button {
     min-height: 46px;
     border: 0;
@@ -199,6 +217,7 @@ button:hover {
 }
 
 input:focus,
+textarea:focus,
 button:focus-visible {
     outline: 3px solid rgba(15, 107, 85, 0.22);
     outline-offset: 2px;
@@ -294,6 +313,47 @@ button:focus-visible {
     font-size: 17px;
 }
 
+.contact-form {
+    display: grid;
+    gap: 12px;
+    padding: 18px;
+    border: 1px solid var(--card-line);
+    border-radius: 16px;
+    background: var(--control-bg);
+}
+
+.contact-heading h2 {
+    margin-bottom: 4px;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.contact-form label {
+    display: grid;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.contact-form button {
+    justify-self: start;
+}
+
+.hidden-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
 @media (max-width: 760px) {
     .app {
         padding: 18px 12px;
@@ -317,7 +377,8 @@ button:focus-visible {
     }
 
     .input-row,
-    .day-card {
+    .day-card,
+    .form-grid {
         grid-template-columns: 1fr;
     }
 
