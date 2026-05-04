@@ -354,6 +354,14 @@ button:focus-visible {
     opacity: 0;
 }
 
+.comments {
+    min-height: 180px;
+    padding: 18px;
+    border: 1px solid var(--card-line);
+    border-radius: 16px;
+    background: var(--control-bg);
+}
+
 @media (max-width: 760px) {
     .app {
         padding: 18px 12px;
