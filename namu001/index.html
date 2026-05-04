@@ -1,0 +1,98 @@
+<!DOCTYPE html> <!-- HTML5 선언 -->
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"> <!-- 한글 깨짐 방지 -->
+    <title>로또 번호 추천기</title>
+
+    <style>
+        /* 전체 기본 설정 */
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            display: flex; /* 가운데 정렬을 위한 핵심 */
+            justify-content: center; /* 가로 가운데 */
+            align-items: center; /* 세로 가운데 */
+            height: 100vh; /* 화면 전체 높이 */
+            margin: 0;
+        }
+
+        /* 전체 박스 */
+        .container {
+            text-align: center; /* 제목, 버튼 가운데 */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* 결과 영역 */
+        #result {
+            margin-top: 30px;
+            font-size: 20px;
+            line-height: 1.8;
+            text-align: left; /* ✅ 핵심: 왼쪽 정렬 */
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container"> <!-- 전체 묶는 박스 -->
+
+        <h1>🎯 효정이의 로또 번호 추천기</h1>
+
+        <!-- 버튼 -->
+        <button onclick="generateLotto()">번호 뽑기</button>
+
+        <!-- 결과 -->
+        <div id="result">버튼을 눌러주세요</div>
+
+    </div>
+
+    <script>
+        function generateLotto() {
+
+            let finalResult = "";
+
+            // 5줄 생성
+            for (let i = 0; i < 5; i++) {
+
+                let numbers = [];
+
+                // 6개 번호 생성 (중복 제거)
+                while (numbers.length < 6) {
+                    let num = Math.floor(Math.random() * 45) + 1;
+
+                    if (!numbers.includes(num)) {
+                        numbers.push(num);
+                    }
+                }
+
+                // 정렬
+                numbers.sort((a, b) => a - b);
+
+                // 결과 누적
+                finalResult += (i + 1) + "️⃣ " + numbers.join(" , ") + "<br>";
+            }
+
+            // 출력
+            document.getElementById("result").innerHTML = finalResult;
+        }
+    </script>
+
+</body>
+</html>
