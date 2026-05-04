@@ -5,11 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>다음 주 연차쓰기 좋은 날 추천</title>
     <link rel="stylesheet" href="style.css">
+    <script>
+        try {
+            const savedTheme = localStorage.getItem('pto-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.dataset.theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        } catch {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
 </head>
 <body>
     <main class="app">
         <section class="planner" aria-labelledby="page-title">
             <header class="planner-header">
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="다크 모드로 변경">
+                    <span class="theme-icon" aria-hidden="true">☀</span>
+                    <span class="theme-text">화이트</span>
+                </button>
                 <p class="eyebrow">NEXT WEEK PTO PICKER</p>
                 <h1 id="page-title">다음 주 연차쓰기 좋은 날</h1>
                 <p class="summary">앞뒤로 쉬는 날이 이어지는지와 활동하기 좋은 날씨인지에 따라 점수를 차등 계산합니다.</p>
@@ -36,6 +49,29 @@
         const cityInput = document.querySelector('#cityInput');
         const bestPick = document.querySelector('#bestPick');
         const dayList = document.querySelector('#dayList');
+        const themeToggle = document.querySelector('#themeToggle');
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        const themeText = themeToggle.querySelector('.theme-text');
+
+        function syncThemeButton() {
+            const isDark = document.documentElement.dataset.theme === 'dark';
+            themeIcon.textContent = isDark ? '☾' : '☀';
+            themeText.textContent = isDark ? '다크' : '화이트';
+            themeToggle.setAttribute('aria-label', isDark ? '화이트 모드로 변경' : '다크 모드로 변경');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.dataset.theme = nextTheme;
+            try {
+                localStorage.setItem('pto-theme', nextTheme);
+            } catch {
+                // Theme still changes for the current session when storage is unavailable.
+            }
+            syncThemeButton();
+        });
+
+        syncThemeButton();
 
         const fixedHolidays = new Map([
             ['01-01', '신정'],
