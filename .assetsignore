@@ -1,0 +1,9 @@
+.git
+.idx
+.vscode
+.wrangler
+node_modules
+src
+functions
+.assetsignore
+wrangler.jsonc
