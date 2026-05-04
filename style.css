@@ -1,1 +1,271 @@
-/* Add styles here */
+
+:root {
+    --panel-bg: rgba(255, 255, 255, 0.92);
+    --ink: #111827;
+    --muted: #5f6b7a;
+    --line: rgba(255, 255, 255, 0.42);
+    --soft: rgba(240, 247, 255, 0.88);
+    --accent: #0b6b58;
+    --accent-dark: #084d40;
+    --gold: #d97706;
+    --shadow: 0 26px 70px rgba(6, 21, 36, 0.28);
+    --font-family: Arial, "Noto Sans KR", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        linear-gradient(115deg, rgba(5, 20, 34, 0.78), rgba(5, 20, 34, 0.2) 48%, rgba(5, 20, 34, 0.74)),
+        url("https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1800&q=85") center / cover fixed;
+    color: var(--ink);
+    font-family: var(--font-family);
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 42px 18px;
+}
+
+.planner {
+    width: min(960px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    gap: 22px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(18px);
+    box-shadow: var(--shadow);
+}
+
+.planner-header {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 26px;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.84)),
+        rgba(255, 255, 255, 0.44);
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+h1,
+h2,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin-bottom: 14px;
+    font-size: 48px;
+    line-height: 1.2;
+}
+
+.summary {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.controls {
+    align-self: start;
+    margin-bottom: 14px;
+    padding: 16px;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.74);
+}
+
+.controls label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+}
+
+input {
+    min-height: 46px;
+    width: 100%;
+    border: 1px solid rgba(17, 24, 39, 0.12);
+    border-radius: 12px;
+    padding: 0 13px;
+    color: var(--ink);
+    background: #ffffff;
+    font: inherit;
+}
+
+button {
+    min-height: 46px;
+    border: 0;
+    border-radius: 12px;
+    padding: 0 20px;
+    background: var(--accent);
+    color: #ffffff;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+}
+
+button:hover {
+    background: var(--accent-dark);
+}
+
+input:focus,
+button:focus-visible {
+    outline: 3px solid rgba(15, 107, 85, 0.22);
+    outline-offset: 2px;
+}
+
+.best-pick {
+    min-height: 190px;
+    display: grid;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 24px;
+    border: 1px solid rgba(15, 107, 85, 0.16);
+    border-radius: 16px;
+    background: var(--soft);
+}
+
+.best-label {
+    margin-bottom: 8px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.best-pick h2 {
+    margin-bottom: 10px;
+    font-size: 32px;
+    line-height: 1.22;
+}
+
+.best-score {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.best-reason {
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.weather-note,
+.loading {
+    margin-bottom: 0;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+.day-list {
+    display: grid;
+    gap: 10px;
+}
+
+.day-card {
+    display: grid;
+    grid-template-columns: 1fr 58px;
+    gap: 16px;
+    align-items: center;
+    min-height: 92px;
+    padding: 15px 16px;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.76);
+}
+
+.day-card .date {
+    margin-bottom: 6px;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.day-card .reason,
+.day-card .weather {
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.day-card strong {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff7e8;
+    color: var(--gold);
+    font-size: 17px;
+}
+
+@media (max-width: 760px) {
+    .app {
+        padding: 18px 12px;
+        align-items: flex-start;
+    }
+
+    .planner {
+        grid-template-columns: 1fr;
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .planner-header {
+        min-height: 260px;
+        padding: 22px;
+        justify-content: flex-end;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
+
+    .input-row,
+    .day-card {
+        grid-template-columns: 1fr;
+    }
+
+    .best-pick h2 {
+        font-size: 25px;
+    }
+
+    .day-card strong {
+        width: auto;
+        height: 36px;
+        border-radius: 8px;
+    }
+}
