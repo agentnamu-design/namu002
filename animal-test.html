@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동물상 테스트</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        try {
+            const savedTheme = localStorage.getItem('pto-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.dataset.theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        } catch {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
+</head>
+<body>
+    <main class="app">
+        <nav class="project-switcher" aria-label="프로젝트 선택">
+            <a class="project-link" href="index.html">첫번째 프로젝트</a>
+            <a class="project-link active" href="animal-test.html">두번째 프로젝트</a>
+        </nav>
+
+        <section class="planner animal-project" aria-labelledby="page-title">
+            <header class="planner-header">
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="다크 모드로 변경">
+                    <span class="theme-icon" aria-hidden="true">☀</span>
+                    <span class="theme-text">화이트</span>
+                </button>
+                <p class="eyebrow">FACE TYPE TEST</p>
+                <h1 id="page-title">동물상 테스트</h1>
+                <p class="summary">사진을 올리고 가까운 인상을 선택하면 결과 카드가 준비됩니다.</p>
+            </header>
+
+            <div class="planner-content">
+                <section class="animal-panel" aria-label="사진 업로드">
+                    <label class="upload-box" for="faceImage">
+                        <span class="upload-title">사진 선택</span>
+                        <span class="upload-copy">얼굴이 잘 보이는 이미지를 올려주세요.</span>
+                        <input id="faceImage" name="faceImage" type="file" accept="image/*">
+                    </label>
+                    <div class="preview-frame" id="imagePreview">
+                        <p class="loading">이미지 미리보기가 여기에 표시됩니다.</p>
+                    </div>
+                </section>
+
+                <form class="animal-form" id="animalForm">
+                    <fieldset>
+                        <legend>가까운 인상</legend>
+                        <label><input type="radio" name="impression" value="bright" required> 밝고 또렷한 인상</label>
+                        <label><input type="radio" name="impression" value="calm"> 차분하고 부드러운 인상</label>
+                        <label><input type="radio" name="impression" value="sharp"> 선명하고 시크한 인상</label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>분위기</legend>
+                        <label><input type="radio" name="mood" value="friendly" required> 친근함</label>
+                        <label><input type="radio" name="mood" value="elegant"> 우아함</label>
+                        <label><input type="radio" name="mood" value="cool"> 도도함</label>
+                    </fieldset>
+
+                    <button type="submit">결과 보기</button>
+                </form>
+
+                <section class="animal-result" id="animalResult" aria-live="polite">
+                    <p class="best-label">결과</p>
+                    <h2>테스트 준비 완료</h2>
+                    <p class="weather-note">사진 업로드와 선택형 테스트 흐름이 준비되어 있습니다.</p>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <script src="theme.js"></script>
+    <script src="animal-test.js"></script>
+</body>
+</html>
