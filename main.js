@@ -1,3 +1,1 @@
-import LottoGenerator from './LottoGenerator.js';
-
-customElements.define('lotto-generator', LottoGenerator);
+// The app currently runs from the inline script in index.html.
