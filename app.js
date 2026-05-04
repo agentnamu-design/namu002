@@ -1,0 +1,302 @@
+const searchForm = document.querySelector('#searchForm');
+const cityInput = document.querySelector('#cityInput');
+const bestPick = document.querySelector('#bestPick');
+const dayList = document.querySelector('#dayList');
+
+const fixedHolidays = new Map([
+    ['01-01', '신정'],
+    ['03-01', '삼일절'],
+    ['05-05', '어린이날'],
+    ['06-06', '현충일'],
+    ['08-15', '광복절'],
+    ['10-03', '개천절'],
+    ['10-09', '한글날'],
+    ['12-25', '성탄절']
+]);
+
+const specialHolidays = new Map([
+    ['2026-02-16', '설날 연휴'],
+    ['2026-02-17', '설날'],
+    ['2026-02-18', '설날 연휴'],
+    ['2026-05-25', '부처님오신날 대체공휴일'],
+    ['2026-09-24', '추석 연휴'],
+    ['2026-09-25', '추석'],
+    ['2026-09-26', '추석 연휴'],
+    ['2026-10-05', '개천절 대체공휴일']
+]);
+
+const weatherLabels = {
+    0: '맑음',
+    1: '대체로 맑음',
+    2: '부분 흐림',
+    3: '흐림',
+    45: '안개',
+    48: '서리 안개',
+    51: '약한 이슬비',
+    53: '이슬비',
+    55: '강한 이슬비',
+    61: '약한 비',
+    63: '비',
+    65: '강한 비',
+    71: '약한 눈',
+    73: '눈',
+    75: '강한 눈',
+    80: '약한 소나기',
+    81: '소나기',
+    82: '강한 소나기',
+    95: '뇌우'
+};
+
+const koreanCityCoordinates = {
+    '서울': { name: '서울', latitude: 37.5665, longitude: 126.9780 },
+    '부산': { name: '부산', latitude: 35.1796, longitude: 129.0756 },
+    '대구': { name: '대구', latitude: 35.8714, longitude: 128.6014 },
+    '인천': { name: '인천', latitude: 37.4563, longitude: 126.7052 },
+    '광주': { name: '광주', latitude: 35.1595, longitude: 126.8526 },
+    '대전': { name: '대전', latitude: 36.3504, longitude: 127.3845 },
+    '울산': { name: '울산', latitude: 35.5384, longitude: 129.3114 },
+    '세종': { name: '세종', latitude: 36.4800, longitude: 127.2890 },
+    '제주': { name: '제주', latitude: 33.4996, longitude: 126.5312 },
+    '수원': { name: '수원', latitude: 37.2636, longitude: 127.0286 },
+    '춘천': { name: '춘천', latitude: 37.8813, longitude: 127.7298 },
+    '청주': { name: '청주', latitude: 36.6424, longitude: 127.4890 },
+    '전주': { name: '전주', latitude: 35.8242, longitude: 127.1480 },
+    '창원': { name: '창원', latitude: 35.2285, longitude: 128.6811 }
+};
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getWeekdayName(date) {
+    return ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+}
+
+function addDays(date, days) {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+}
+
+function getNextWeekdays() {
+    const today = new Date();
+    const mondayOffset = today.getDay() === 0 ? -6 : 1 - today.getDay();
+    const monday = addDays(today, mondayOffset + 7);
+    return Array.from({ length: 5 }, (_, index) => addDays(monday, index));
+}
+
+function getHolidayName(date) {
+    const dateKey = formatDate(date);
+    const monthDayKey = dateKey.slice(5);
+    return specialHolidays.get(dateKey) || fixedHolidays.get(monthDayKey) || '';
+}
+
+function isHolidayOrWeekend(date) {
+    return date.getDay() === 0 || date.getDay() === 6 || Boolean(getHolidayName(date));
+}
+
+function getWeatherScore(weather) {
+    if (!weather) {
+        return { score: 10, reason: '날씨 정보 없음' };
+    }
+
+    const code = weather.weathercode;
+    const temp = weather.temperature_2m_max;
+    const rain = weather.precipitation_sum;
+    let score = 35;
+    const reasons = [];
+
+    if ([0, 1, 2].includes(code)) {
+        reasons.push('맑은 편');
+    } else if (code === 3 || code === 45 || code === 48) {
+        score -= 8;
+        reasons.push(weatherLabels[code] || '무난한 하늘');
+    } else if (code >= 51 && code <= 82) {
+        score -= 22;
+        reasons.push('비 예보');
+    } else {
+        score -= 16;
+        reasons.push(weatherLabels[code] || '날씨 변수');
+    }
+
+    if (temp >= 18 && temp <= 27) {
+        reasons.push('활동하기 좋은 기온');
+    } else if (temp >= 10 && temp <= 31) {
+        score -= 7;
+        reasons.push('무난한 기온');
+    } else {
+        score -= 15;
+        reasons.push('기온 부담');
+    }
+
+    if (rain >= 5) {
+        score -= 12;
+        reasons.push('강수량 주의');
+    } else if (rain > 0) {
+        score -= 5;
+        reasons.push('약한 강수 가능');
+    } else {
+        reasons.push('강수 없음');
+    }
+
+    return { score: Math.max(0, Math.min(35, score)), reason: reasons.join(', ') };
+}
+
+function getLeaveScore(date) {
+    const previous = addDays(date, -1);
+    const next = addDays(date, 1);
+    const beforePrevious = addDays(date, -2);
+    const afterNext = addDays(date, 2);
+    const reasons = [];
+    let score = 20;
+
+    if (getHolidayName(date)) {
+        return { score: -100, reasons: [`이미 ${getHolidayName(date)}입니다`] };
+    }
+
+    if (isHolidayOrWeekend(previous) && isHolidayOrWeekend(next)) {
+        score = 65;
+        reasons.push('앞뒤가 쉬는 날인 징검다리 연휴');
+    } else if (isHolidayOrWeekend(previous) || isHolidayOrWeekend(next)) {
+        score = 48;
+        reasons.push('휴일과 붙여 쉬기 좋음');
+    }
+
+    if (isHolidayOrWeekend(beforePrevious) && isHolidayOrWeekend(previous)) {
+        score += 10;
+        reasons.push('앞쪽 연휴를 더 길게 확장');
+    }
+
+    if (isHolidayOrWeekend(next) && isHolidayOrWeekend(afterNext)) {
+        score += 10;
+        reasons.push('뒤쪽 연휴를 더 길게 확장');
+    }
+
+    if (date.getDay() === 1 || date.getDay() === 5) {
+        score += 8;
+        reasons.push(date.getDay() === 1 ? '주말 뒤 월요일' : '주말 앞 금요일');
+    }
+
+    if (reasons.length === 0) {
+        reasons.push('일반 평일');
+    }
+
+    return { score: Math.min(65, score), reasons };
+}
+
+async function fetchWeather(city, dates) {
+    const normalizedCity = city.replace(/\s/g, '');
+    let place = koreanCityCoordinates[normalizedCity];
+
+    if (!place) {
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=ko&format=json`;
+        const geoResponse = await fetch(geoUrl);
+        const geoData = await geoResponse.json();
+        const geoPlace = geoData.results?.[0];
+
+        if (!geoPlace) {
+            throw new Error('지역을 찾을 수 없습니다.');
+        }
+
+        place = {
+            name: `${geoPlace.name}${geoPlace.admin1 ? `, ${geoPlace.admin1}` : ''}`,
+            latitude: geoPlace.latitude,
+            longitude: geoPlace.longitude
+        };
+    }
+
+    const startDate = formatDate(dates[0]);
+    const endDate = formatDate(dates[dates.length - 1]);
+    const weatherUrl = [
+        'https://api.open-meteo.com/v1/forecast',
+        `?latitude=${place.latitude}`,
+        `&longitude=${place.longitude}`,
+        '&daily=weathercode,temperature_2m_max,precipitation_sum',
+        '&timezone=auto',
+        `&start_date=${startDate}`,
+        `&end_date=${endDate}`
+    ].join('');
+    const weatherResponse = await fetch(weatherUrl);
+    const weatherData = await weatherResponse.json();
+
+    return {
+        place: place.name,
+        daily: weatherData.daily.time.reduce((map, dateKey, index) => {
+            map[dateKey] = {
+                weathercode: weatherData.daily.weathercode[index],
+                temperature_2m_max: weatherData.daily.temperature_2m_max[index],
+                precipitation_sum: weatherData.daily.precipitation_sum[index]
+            };
+            return map;
+        }, {})
+    };
+}
+
+function buildRecommendations(dates, weatherByDate) {
+    return dates.map((date) => {
+        const dateKey = formatDate(date);
+        const leave = getLeaveScore(date);
+        const weather = getWeatherScore(weatherByDate[dateKey]);
+        const total = Math.max(0, Math.min(100, leave.score + weather.score));
+
+        return {
+            date,
+            total,
+            weather: weatherByDate[dateKey],
+            reasons: [...leave.reasons, weather.reason]
+        };
+    }).sort((a, b) => b.total - a.total);
+}
+
+function render(recommendations, place) {
+    const best = recommendations[0];
+    const bestWeather = best.weather;
+
+    bestPick.innerHTML = `
+        <div>
+            <p class="best-label">추천 1순위</p>
+            <h2>${best.date.getMonth() + 1}월 ${best.date.getDate()}일 ${getWeekdayName(best.date)}요일</h2>
+            <p class="best-score">${best.total}점</p>
+            <p class="best-reason">${best.reasons.join(' · ')}</p>
+            <p class="weather-note">${place} 기준${bestWeather ? ` · 최고 ${bestWeather.temperature_2m_max}도 · ${weatherLabels[bestWeather.weathercode] || '날씨 확인 필요'}` : ''}</p>
+        </div>
+    `;
+
+    dayList.innerHTML = recommendations.slice(0, 2).map((item, index) => {
+        const weather = item.weather;
+        return `
+            <article class="day-card">
+                <div>
+                    <p class="date">${index + 1}순위 · ${item.date.getMonth() + 1}.${item.date.getDate()} (${getWeekdayName(item.date)})</p>
+                    <p class="reason">${item.reasons.join(' · ')}</p>
+                    <p class="weather">${weather ? `${weatherLabels[weather.weathercode] || '날씨 확인 필요'} · 최고 ${weather.temperature_2m_max}도 · 강수 ${weather.precipitation_sum}mm` : '날씨 정보 없음'}</p>
+                </div>
+                <strong>${item.total}점</strong>
+            </article>
+        `;
+    }).join('');
+}
+
+async function loadRecommendations(city = cityInput.value.trim() || '서울') {
+    const dates = getNextWeekdays();
+    bestPick.innerHTML = '<p class="loading">다음 주 일정과 날씨를 확인하는 중입니다.</p>';
+    dayList.innerHTML = '';
+
+    try {
+        const weather = await fetchWeather(city, dates);
+        render(buildRecommendations(dates, weather.daily), weather.place);
+    } catch (error) {
+        const fallback = buildRecommendations(dates, {});
+        render(fallback, `${city} 날씨 연결 실패`);
+    }
+}
+
+searchForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    loadRecommendations();
+});
+
+loadRecommendations();

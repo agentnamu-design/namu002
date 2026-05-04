@@ -90,6 +90,38 @@ body {
     background: var(--header-bg);
 }
 
+.page-nav {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    right: 120px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nav-link,
+.link-button {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--card-line);
+    border-radius: 999px;
+    padding: 0 13px;
+    background: var(--card-bg);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.nav-link:hover,
+.link-button:hover,
+.nav-link.active {
+    background: var(--soft);
+}
+
 .planner-content {
     display: grid;
     gap: 14px;
@@ -313,6 +345,33 @@ button:focus-visible {
     font-size: 17px;
 }
 
+.action-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.link-button {
+    min-height: 46px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: #ffffff;
+    padding: 0 18px;
+}
+
+.link-button:hover {
+    background: var(--accent-dark);
+}
+
+.link-button.secondary {
+    background: var(--card-bg);
+    color: var(--ink);
+}
+
+.link-button.secondary:hover {
+    background: var(--soft);
+}
+
 .contact-form {
     display: grid;
     gap: 12px;
@@ -455,6 +514,10 @@ button:focus-visible {
     white-space: pre-wrap;
 }
 
+.standalone {
+    align-self: start;
+}
+
 @media (max-width: 760px) {
     .app {
         padding: 18px 12px;
@@ -471,6 +534,11 @@ button:focus-visible {
         min-height: 260px;
         padding: 22px;
         justify-content: flex-end;
+    }
+
+    .page-nav {
+        position: static;
+        margin-bottom: 56px;
     }
 
     h1 {

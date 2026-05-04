@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 - 다음 주 연차쓰기 좋은 날 추천</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        try {
+            const savedTheme = localStorage.getItem('pto-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.dataset.theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        } catch {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
+</head>
+<body>
+    <main class="app">
+        <section class="planner" aria-labelledby="page-title">
+            <header class="planner-header">
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="다크 모드로 변경">
+                    <span class="theme-icon" aria-hidden="true">☀</span>
+                    <span class="theme-text">화이트</span>
+                </button>
+                <nav class="page-nav" aria-label="페이지">
+                    <a class="nav-link" href="index.html">연차 추천</a>
+                    <a class="nav-link active" href="comments.html">댓글</a>
+                    <a class="nav-link" href="contact.html">제휴 문의</a>
+                </nav>
+                <p class="eyebrow">GUEST COMMENTS</p>
+                <h1 id="page-title">댓글</h1>
+                <p class="summary">로그인 없이 이름과 댓글만 입력해 의견을 남길 수 있습니다.</p>
+            </header>
+
+            <div class="planner-content">
+                <section class="comments standalone" aria-label="댓글">
+                    <div class="comments-heading">
+                        <p class="best-label">댓글</p>
+                        <h2>연차 의견을 남겨주세요</h2>
+                    </div>
+                    <form class="comment-form" id="commentForm">
+                        <input class="hidden-field" id="commentWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+                        <label for="commentName">
+                            이름
+                            <input id="commentName" name="name" type="text" maxlength="24" autocomplete="nickname" placeholder="익명" required>
+                        </label>
+                        <label for="commentMessage">
+                            댓글
+                            <textarea id="commentMessage" name="message" rows="4" maxlength="400" placeholder="로그인 없이 바로 남길 수 있어요." required></textarea>
+                        </label>
+                        <button type="submit">댓글 남기기</button>
+                        <p class="comment-status" id="commentStatus" role="status" aria-live="polite"></p>
+                    </form>
+                    <div class="comment-list" id="commentList" aria-live="polite">
+                        <p class="loading">댓글을 불러오는 중입니다.</p>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <script src="theme.js"></script>
+    <script src="comments.js"></script>
+</body>
+</html>
